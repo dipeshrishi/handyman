@@ -1,0 +1,171 @@
+// Variables
+$yellow:  #add356;
+$teal:    #00dfa6;
+$lorange: #ffcb52;
+$dorange: #ff451f;
+$blue:    #3dade9;
+$purple:  #bf2fcb;
+
+
+/* Mixins */
+@mixin box-gradient($from, $to, $weight: 0) {
+  $mix-main: mix($from, $to);
+  $mix-sub-from: mix($mix-main, $from);
+  $mix-sub-to: mix($mix-main, $to);
+  
+  box-shadow:
+  // left - start color
+  -1px   0    0 $weight rgba($from, .75),
+  // top left - mix of two colors plus start
+  -1px  -1px  0 $weight rgba($mix-sub-from, .25),
+  // bottom left - mix of two colors plus start
+  -1px   1px  0 $weight rgba($mix-sub-from, .25),
+  // top mid - mix of two colors
+   0    -1px  0 $weight rgba($mix-main, .5),
+  // bottom mid - mix of two colors
+   0     1px  0 $weight rgba($mix-main, .5),
+  // top right - mix of two colors plus end
+   1px  -1px  0 $weight rgba($mix-sub-to, .25),
+  // bottom right - mix of two colors plus end
+   1px   1px  0 $weight rgba($mix-sub-to, .25),
+  // right - end color
+   1px   0    0 $weight rgba($to, .75);
+}
+
+@mixin border-gradient($from, $to, $width) {
+  border-left: $width solid $from;
+  border-right: $width solid $to;
+  background-image:
+    // both needed for top & bottom
+    linear-gradient(left, $from, $to),
+    linear-gradient(left, $from, $to);
+  
+  // 100% left & right, $width px top & bottom
+  background-size: 100% $width;
+  background-position: 0 100%, 0 0;
+  background-repeat: no-repeat;
+  background-clip: border-box;
+}
+
+@mixin border-image($from, $to, $width) {
+  border-image: linear-gradient(left, $from, $to);
+  border-image-slice: 1;
+  border-image-width: $width;
+}
+
+@mixin font-gradient($from, $to, $dir) {
+  background: -webkit-linear-gradient($dir, $from, $to);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.btn {
+  display: inline-block;
+  margin: 1em 0;
+  padding: 1em 2em;
+  
+  background: transparent;
+  border-radius: 3px;
+  font-weight: 400;
+  text-align: center;
+}
+  .green span {
+    @include font-gradient($yellow, $teal, left);
+  }
+  .orange span {
+    @include font-gradient($lorange, $dorange, left);
+  }
+  .blue span {
+    @include font-gradient($blue, $purple, left);
+  }
+  
+  .blue {
+    padding: .75em;
+    font-size: 3em;
+    font-weight: 100;
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+/* Box-Shadow Technique */
+.box {
+  .green {
+    @include box-gradient($yellow, $teal, 1px);
+  }
+  .orange {
+    @include box-gradient($lorange, $dorange, 1px);
+  }
+  .blue {
+    @include box-gradient($blue, $purple, 1px);
+  }
+}
+
+/* Gradient & Border Technique */
+.border {
+  .green {
+    @include border-gradient($yellow, $teal, 2px);
+  }
+  .orange {
+    @include border-gradient($lorange, $dorange, 2px);
+  }
+  .blue {
+    @include border-gradient($blue, $purple, 2px);
+  }
+}
+
+/* Border Image Gradient Technique */
+.border-image {
+  .green {
+    @include border-image($yellow, $teal, 2px);
+  }
+  .orange {
+    @include border-image($lorange, $dorange, 2px);
+  }
+  .blue {
+    @include border-image($blue, $purple, 2px);
+  }
+}
+
+
+/* Stage Styles */
+
+* { box-sizing: border-box; }
+
+body {
+	font: normal 1em 'Helvetica Neue', Roboto, 'Open Sans', Helvetica, Arial, sans-serif;
+	background: #1d2025;
+  margin-top: 2em;
+  
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+  .buttons {
+    display: flex;
+    flex: 1 0 1;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 1em;
+  }
+    p {
+      color: white;
+      text-align: center;
+      text-shadow: 0 0 10px rgba($blue,.5);
+    }
+    .btn {
+      align-self: center;
+      
+      &.blue { align-self: stretch; }
+    }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
